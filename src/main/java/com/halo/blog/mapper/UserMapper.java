@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Service;
 
 @Mapper
 public  interface UserMapper {
@@ -20,4 +21,7 @@ public  interface UserMapper {
 
     @Select("select * from MYH2 where token=#{token}")
     User findByToken(@Param("token") String token);
+
+    @Select("select * from MYH2 where id = #{id}")
+    User findById(@Param("id") Integer id);
 }

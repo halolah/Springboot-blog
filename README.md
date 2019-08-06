@@ -5,3 +5,5 @@
 [mybatis](http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/index.html)
 [spring-embedded-database-support](https://docs.spring.io/spring-boot/docs/2.0.0.RC1/reference/htmlsingle/#boot-features-embedded-database-support)
 [lombok](https://projectlombok.org/features/all)
+[thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
+[sping mvc](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html)
