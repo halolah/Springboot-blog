@@ -48,7 +48,7 @@
                         </a>
                     </li>
                     <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'active' : ''">
-                        <a th:href="@{/profile/questions/(page=${page})}" th:text="${page}">
+                        <a th:href="@{'/profile/'+${section}(page=${page})}" th:text="${page}">
                         </a>
                     </li>
                     <li  th:if="${pagination.showNext}">

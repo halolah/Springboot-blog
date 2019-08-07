@@ -78,7 +78,6 @@ public class QuestionService {
             page = paginationDTO.getTotalPage();
         }
 
-
         for (Question question: questions){
             User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
