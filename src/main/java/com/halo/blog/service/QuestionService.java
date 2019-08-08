@@ -2,6 +2,8 @@ package com.halo.blog.service;
 
 import com.halo.blog.dto.PaginationDTO;
 import com.halo.blog.dto.QuestionDTO;
+import com.halo.blog.exception.CustomizeErrorCode;
+import com.halo.blog.exception.CustomizeException;
 import com.halo.blog.mapper.QuestionMapper;
 import com.halo.blog.mapper.UserMapper;
 import com.halo.blog.model.Question;
@@ -99,6 +101,10 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
+
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setUser(user);
@@ -119,7 +125,11 @@ public class QuestionService {
             updateQuestion.setTag(question.getTag());
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion, questionExample);
+            if (updated != 1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+
+            }
         }
 
     }
