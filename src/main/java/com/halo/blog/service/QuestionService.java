@@ -97,4 +97,16 @@ public class QuestionService {
         BeanUtils.copyProperties(question, questionDTO);
         return questionDTO;
     }
+
+    public void createOrUpdate(Question question) {
+        if (question.getId() == null) {
+            //创建
+            questionMapper.create(question);
+        } else {
+            //更新
+            question.setModified(question.getModified());
+            questionMapper.update(question);
+        }
+
+    }
 }
