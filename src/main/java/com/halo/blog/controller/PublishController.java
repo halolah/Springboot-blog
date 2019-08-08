@@ -25,37 +25,37 @@ public class PublishController {
     private UserMapper userMapper;
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish() {
         return "publish";
     }
 
     @PostMapping("/publish")
     public String doPublic(
             @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "description", required = false)String description,
+            @RequestParam(value = "description", required = false) String description,
             @RequestParam("tag") String tag,
             Model model,
-            HttpServletRequest request){
+            HttpServletRequest request) {
         model.addAttribute("title", title);
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
 
-        if(title == null || title== ""){
+        if (title == null || title == "") {
             model.addAttribute("error", "标题不能为空");
             return "publish";
         }
-        if(description == null || description== ""){
+        if (description == null || description == "") {
             model.addAttribute("error", "问题补充不能为空");
             return "publish";
         }
-        if(tag == null || tag== ""){
+        if (tag == null || tag == "") {
             model.addAttribute("error", "标签不能为空");
             return "publish";
         }
 
 
-        User user = (User)request.getSession().getAttribute("user");
-        if(user == null && user.getId() != null){
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null && user.getId() != null) {
             model.addAttribute("error", "用户未登陆");
             return "publish";
         }

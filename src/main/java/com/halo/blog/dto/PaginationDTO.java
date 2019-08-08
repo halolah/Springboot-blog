@@ -21,54 +21,54 @@ public class PaginationDTO {
     private List<Integer> pages = new ArrayList<>();
 
     public void setPagination(Integer totalCount, Integer page, Integer size) {
-        if(totalCount % size ==0){
-            totalPage = totalCount / size;}
-        else{
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
             totalPage = totalCount / size + 1;
-            }
-        if(page < 1){
+        }
+        if (page < 1) {
             page = 1;
         }
-        if(page > totalPage){
+        if (page > totalPage) {
             page = totalPage;
         }
         this.page = page;
 
         pages.add(page);
-        for(int i =1; i <= 3; i++){
-            if(page - i > 0){
-                pages.add(0,page - i);
+        for (int i = 1; i <= 3; i++) {
+            if (page - i > 0) {
+                pages.add(0, page - i);
             }
-            if(page + i <= totalPage){
+            if (page + i <= totalPage) {
                 pages.add(page + i);
             }
         }
 
         // 是否展示上一页
-        if(page == 1){
+        if (page == 1) {
             showPrevious = false;
-        }else{
+        } else {
             showPrevious = true;
         }
         // 是否展示最后一页
-        if(page.equals(totalPage)){
+        if (page.equals(totalPage)) {
             showNext = false;
-        }else{
+        } else {
             showNext = true;
         }
         // 是否展示第一页
-        if(! pages.contains(1)){
+        if (!pages.contains(1)) {
             showFistPage = false;
-        }else{
+        } else {
             showFistPage = true;
         }
         // 是否展示最后一页
-        if(! pages.contains(totalPage)){
+        if (!pages.contains(totalPage)) {
             showEndPage = false;
-        }else{
+        } else {
             showEndPage = true;
         }
 
-        }
     }
+}
 

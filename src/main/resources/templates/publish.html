@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>SpringBoot community</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
@@ -15,37 +15,40 @@
 
 <div class="container-fluid main" style="margin-left: 30px; margin-right: 30px;">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
 
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发起</h2>
             <hr>
 
-        <form action="/publish" method="post">
-            <div class="form-group">
-                <label for="title">问题标题</label>
-                <input type="text" class="form-control" id="title"  name="title" th:value="${title}" placeholder="问题标题....">
-            </div>
-            <div class="form-group">
-                <label for="title">问题补充</label>
-                <textarea name="description"  id="description" th:text="${description}" class="form-control" cols="30" rows="10"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="title">添加标签</label>
-                <input type="text" class="form-control"  th:value="${tag}" id="tag" name="tag" placeholder="输入标签，用,分隔">
-            </div>
-            <div class="container-fluid main" style="margin-left: 30px; margin-right: 30px;">
-                <div class="row">
-                    <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
-                    <span class="alert alert-danger" th:text="${error}" th:if="${error} != null"></span>
+            <form action="/publish" method="post">
+                <div class="form-group">
+                    <label for="title">问题标题</label>
+                    <input type="text" class="form-control" id="title" name="title" th:value="${title}"
+                           placeholder="问题标题....">
+                </div>
+                <div class="form-group">
+                    <label for="title">问题补充</label>
+                    <textarea name="description" id="description" th:text="${description}" class="form-control"
+                              cols="30" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="title">添加标签</label>
+                    <input type="text" class="form-control" th:value="${tag}" id="tag" name="tag"
+                           placeholder="输入标签，用,分隔">
+                </div>
+                <div class="container-fluid main" style="margin-left: 30px; margin-right: 30px;">
+                    <div class="row">
+                        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                            <span class="alert alert-danger" th:text="${error}" th:if="${error} != null"></span>
+                        </div>
+                        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                            <button type="submit" class="btn btn-primary  btn-publish">发布</button>
+                        </div>
                     </div>
-                    <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                        <button type="submit" class="btn btn-primary  btn-publish">发布</button>
-                    </div>
+
                 </div>
 
-            </div>
-
-        </form>
+            </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>问题发起指南</h3>

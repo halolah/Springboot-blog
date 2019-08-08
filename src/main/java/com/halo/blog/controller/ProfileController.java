@@ -25,26 +25,26 @@ public class ProfileController {
     private UserMapper userMapper;
 
     @Autowired
-    private  QuestionService questionService;
+    private QuestionService questionService;
 
     @GetMapping("/profile/{action}")
-    public String profile(@PathVariable(name = "action")String action,
+    public String profile(@PathVariable(name = "action") String action,
                           HttpServletRequest request,
-                          @RequestParam(name="page",defaultValue = "1") Integer page,
-                          @RequestParam(name="size",defaultValue = "5") Integer size,
-                          Model model){
+                          @RequestParam(name = "page", defaultValue = "1") Integer page,
+                          @RequestParam(name = "size", defaultValue = "5") Integer size,
+                          Model model) {
 
-        User user = (User)request.getSession().getAttribute("user");
-        if(user == null){
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
             model.addAttribute("error", "用户未登陆");
             return "redirect:/";
         }
 
-        if( "questions".equals(action)){
-            model.addAttribute("section","questions");
+        if ("questions".equals(action)) {
+            model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
-        }else if("replies".equals(action)){
-            model.addAttribute("section","replies");
+        } else if ("replies".equals(action)) {
+            model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
         }
         PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
