@@ -79,8 +79,8 @@ public class PublishController {
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
-        question.setGmt_create(user.getGmt_create());
-        question.setModified(user.getGmt_modified());
+        question.setGmt_create(user.getGmtCreate());
+        question.setModified(user.getGmtModified());
         question.setId(id);
 
         questionService.createOrUpdate(question);
