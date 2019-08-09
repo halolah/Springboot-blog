@@ -4,13 +4,14 @@ import com.halo.blog.dto.PaginationDTO;
 import com.halo.blog.dto.QuestionDTO;
 import com.halo.blog.exception.CustomizeErrorCode;
 import com.halo.blog.exception.CustomizeException;
+import com.halo.blog.mapper.QuestionExMapper;
 import com.halo.blog.mapper.QuestionMapper;
 import com.halo.blog.mapper.UserMapper;
 import com.halo.blog.model.Question;
 import com.halo.blog.model.QuestionExample;
 import com.halo.blog.model.User;
+import com.halo.blog.util.MyUtils;
 import org.apache.ibatis.session.RowBounds;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ import java.util.List;
 public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExMapper questionExMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -54,7 +58,7 @@ public class QuestionService {
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(question, questionDTO);
+            MyUtils.myCopyProperties(question, questionDTO);
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
@@ -90,7 +94,7 @@ public class QuestionService {
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(question, questionDTO);
+            MyUtils.myCopyProperties(question, questionDTO);
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
@@ -108,13 +112,16 @@ public class QuestionService {
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setUser(user);
-        BeanUtils.copyProperties(question, questionDTO);
+        MyUtils.myCopyProperties(question, questionDTO);
         return questionDTO;
     }
 
     public void createOrUpdate(Question question) {
         if (question.getId() == null) {
             //创建
+            question.setCommentCount(0);
+            question.setViewCount(0);
+            question.setLikeCount(0);
             questionMapper.insert(question);
         } else {
             //更新
@@ -132,5 +139,12 @@ public class QuestionService {
             }
         }
 
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExMapper.incView(question);
     }
 }

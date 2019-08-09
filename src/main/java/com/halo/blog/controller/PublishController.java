@@ -1,8 +1,6 @@
 package com.halo.blog.controller;
 
 import com.halo.blog.dto.QuestionDTO;
-import com.halo.blog.mapper.QuestionMapper;
-import com.halo.blog.mapper.UserMapper;
 import com.halo.blog.model.Question;
 import com.halo.blog.model.User;
 import com.halo.blog.service.QuestionService;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
