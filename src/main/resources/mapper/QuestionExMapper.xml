@@ -20,4 +20,8 @@
     <update id="incView" parameterType="com.halo.blog.model.Question">
     update QUESTION set VIEW_COUNT = VIEW_COUNT + #{viewCount,jdbcType=INTEGER} where id = #{id}
   </update>
+
+    <update id="incComment" parameterType="com.halo.blog.model.Question">
+    update QUESTION set COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType=INTEGER} where id = #{id}
+  </update>
 </mapper>

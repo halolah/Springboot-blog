@@ -8,7 +8,7 @@
 [thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
 [sping mvc](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html)
 [mybatis generator](http://www.mybatis.org/generator/)
-
+[postman](https://chrome.google.com/webstore/detail/tabbed-postman-rest-clien/coohjcphdfgbiolnekdpbcijmhambjff)
 
 
 ## 相关执行
@@ -18,4 +18,7 @@ mvn flyway:migrate
 
 #### mybatis.generator
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+
+
+
 
