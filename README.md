@@ -9,7 +9,7 @@
 [sping mvc](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html)
 [mybatis generator](http://www.mybatis.org/generator/)
 [postman](https://chrome.google.com/webstore/detail/tabbed-postman-rest-clien/coohjcphdfgbiolnekdpbcijmhambjff)
-
+[jquery api](https://api.jquery.com/jQuery.post/)
 
 ## 相关执行
 

@@ -10,6 +10,17 @@
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 
 </head>
+<!--未登陆情况判断，与community.js方法对应-->
+<script type="application/javascript">
+    window.onload = function () {
+        // debugger; the debug way of js
+        var closed = window.localStorage.getItem("closable");
+        if (closed == "true") {
+            window.close();
+            window.localStorage.removeItem("closable");
+        }
+    }
+</script>
 <body>
 <div th:insert="navigation :: nav"></div>
 
