@@ -3,21 +3,22 @@
 <head>
     <title th:text="${question.title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="/css/community.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-    <script src="/js/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="/css/community.css">
+
+    <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
-    <script src="/js/community.js"></script>
+    <script src="/js/community.js" type="application/javascript"></script>
 
 </head>
 <body>
 <div th:insert="navigation :: nav"></div>
 
-<div class="container-fluid main" style="margin-left: 30px; margin-right: 30px;">
+<div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-
+            <!--正文-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h3><span class="glyphicon" aria-hidden="true" th:text="${question.title}"></span></h3>
                 <span class="text-desc">
@@ -34,8 +35,37 @@
                     编辑
                 </a>
             </div>
-
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <!-- 回复-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>
+                    <span th:text="${question.commentCount}"></span>个回复
+                </h4>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments" th:each="comment : ${comments}">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="#"><img class="media-object img-rounded" th:src="${comment.user.avatarUrl}"></a>
+                        </div>
+                        <div class="media-body customize-media-body add-margin">
+                            <h4 class="media-heading"><span th:text="${comment.user.name}"></span></h4>
+                        </div>
+
+                        <div class="add-margin">
+                            <div th:text="${comment.content}"></div>
+                        </div>
+                        <div class="menu">
+                            <span class="glyphicon glyphicon-thumbs-up icon"></span>
+                            <span class="glyphicon glyphicon-comment icon"></span>
+                            <span class="pull-right icon"
+                                  th:text="${#dates.format(comment.gmtCreate, 'yyyy-MM-dd')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--回复输入框-->
+
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_section">
                 <div class="media">
                     <div class="media-left">
@@ -47,13 +77,13 @@
                 </div>
                 <input type="hidden" id="com_question" th:value="${question.id}">
                 <input type="hidden" id="test" th:value="${question.id}">
-                <textarea class="form-control" rows="5" style="margin: 10px 0;" id="comment_content"></textarea>
-                <button type="button" class="btn btn-success btn-comment" style="float: right;margin: 10px 0;"
+                <textarea class="form-control add-margin" rows="8" id="comment_content"></textarea>
+                <button type="button" class="btn btn-success btn-comment"
                         onclick="post()">回复
                 </button>
-
             </div>
         </div>
+        <!-- 右侧发起人-->
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 ">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>发起人</h4>

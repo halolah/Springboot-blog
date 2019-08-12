@@ -1,18 +1,25 @@
 package com.halo.blog.service;
 
+import com.halo.blog.dto.CommentDTO;
 import com.halo.blog.enums.CommentTypesEnum;
 import com.halo.blog.exception.CustomizeErrorCode;
 import com.halo.blog.exception.CustomizeException;
 import com.halo.blog.mapper.CommentMapper;
 import com.halo.blog.mapper.QuestionExMapper;
 import com.halo.blog.mapper.QuestionMapper;
-import com.halo.blog.model.Comment;
-import com.halo.blog.model.Question;
-import com.halo.blog.model.QuestionExample;
+import com.halo.blog.mapper.UserMapper;
+import com.halo.blog.model.*;
+import com.halo.blog.util.MyUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by halo on 2019/8/9.
@@ -29,6 +36,9 @@ public class CommentService {
 
     @Autowired
     private QuestionExMapper questionExMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Transient
     public void insert(Comment comment) throws CustomizeException {
@@ -62,4 +72,37 @@ public class CommentService {
         }
     }
 
+    public List<CommentDTO> listByQuestionId(Long id) {
+        CommentExample commentExample = new CommentExample();
+        commentExample.createCriteria().andParentIdEqualTo(id).andTypeEqualTo(CommentTypesEnum.QUESTION.getType());
+        List<Comment> comments = commentMapper.selectByExample(commentExample);
+
+        if (comments.size() == 0) {
+            return new ArrayList<>();
+        }
+        // 根据commentator字段去重
+        Set<Long> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
+
+        // 转换成list
+        List<Long> userIds = new ArrayList<>();
+        userIds.addAll(commentators);
+
+        // 根据id获取user列表
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andIdIn(userIds);
+        List<User> users = userMapper.selectByExample(userExample);
+
+        // 获取一个map<id, user>
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+
+        // 将user和comment使用map进行关联
+        List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
+            CommentDTO commentDTO = new CommentDTO();
+            MyUtils.myCopyProperties(comment, commentDTO);
+            commentDTO.setUser(userMap.get(comment.getCommentator()));
+            return commentDTO;
+        }).collect(Collectors.toList());
+
+        return commentDTOS;
+    }
 }

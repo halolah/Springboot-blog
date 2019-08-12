@@ -42,3 +42,28 @@ body {
     float: right;
     margin-bottom: 10px;
 }
+
+.add-margin {
+    margin: 10px;
+}
+
+.menu {
+    color: #999;
+}
+
+.menu .icon {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.menu .icon:hover {
+    color: #499ef3;
+}
+
+.comments {
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}

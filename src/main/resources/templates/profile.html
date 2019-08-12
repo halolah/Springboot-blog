@@ -13,7 +13,7 @@
 <body>
 <div th:insert="navigation :: nav"></div>
 
-<div class="container-fluid main" style="margin-left: 30px; margin-right: 30px;">
+<div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon" aria-hidden="true" th:text="${sectionName}"></span></h2>
@@ -67,7 +67,7 @@
 
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 ">
-            <div class="list-group section" style="margin-top: 15px">
+            <div class="list-group section">
                 <a href="/profile/questions"
                    th:class="${section == 'questions'}? 'active list-group-item' : 'list-group-item'">我的问题</a>
                 <a href="/profile/replies"

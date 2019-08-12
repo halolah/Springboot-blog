@@ -1,15 +1,22 @@
 package com.halo.blog.dto;
 
+import com.halo.blog.model.User;
 import lombok.Data;
 
 /**
- * Created by halo on 2019/8/9.
- * TODO: parentId取不到值，增加id字段来取值
+ * Created by halo on 2019/8/12.
+ * type :区分被评论的是问题还是评论
  */
+
 @Data
 public class CommentDTO {
+    private Long id;
     private Long parentId;
     private String content;
+    private Long commentator;
     private Integer type;
-    private Long id;
+    private Long gmtCreate;
+    private Long gmtModified;
+    private Long likeCount;
+    private User user;
 }

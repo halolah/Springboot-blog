@@ -1,20 +1,17 @@
 package com.halo.blog.controller;
 
-import com.halo.blog.dto.CommentDTO;
+import com.halo.blog.dto.CommentCreateDTO;
 import com.halo.blog.dto.ResultDTO;
 import com.halo.blog.exception.CustomizeErrorCode;
 import com.halo.blog.mapper.CommentMapper;
 import com.halo.blog.model.Comment;
 import com.halo.blog.model.User;
 import com.halo.blog.service.CommentService;
-import org.omg.CORBA.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 
 /**
  * Created by halo on 2019/8/9.
@@ -30,7 +27,7 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDTO commentDTO,
+    public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
                        HttpServletRequest request) {
 
         User user = (User) request.getSession().getAttribute("user");
@@ -39,9 +36,9 @@ public class CommentController {
         }
 
         Comment comment = new Comment();
-        comment.setParentId(commentDTO.getId());
-        comment.setContent(commentDTO.getContent());
-        comment.setType(commentDTO.getType());
+        comment.setParentId(commentCreateDTO.getId());
+        comment.setContent(commentCreateDTO.getContent());
+        comment.setType(commentCreateDTO.getType());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
