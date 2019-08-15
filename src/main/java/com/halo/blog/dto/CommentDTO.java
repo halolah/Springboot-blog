@@ -6,6 +6,7 @@ import lombok.Data;
 /**
  * Created by halo on 2019/8/12.
  * type :区分被评论的是问题还是评论
+ * user : 获取头像和名字等信息
  */
 
 @Data

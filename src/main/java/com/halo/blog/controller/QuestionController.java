@@ -2,6 +2,7 @@ package com.halo.blog.controller;
 
 import com.halo.blog.dto.CommentDTO;
 import com.halo.blog.dto.QuestionDTO;
+import com.halo.blog.enums.CommentTypesEnum;
 import com.halo.blog.service.CommentService;
 import com.halo.blog.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class QuestionController {
     public String question(@PathVariable(name = "id") Long id,
                            Model model) {
 
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypesEnum.QUESTION);
 
         // 累加阅读数
         questionService.incView(id);
