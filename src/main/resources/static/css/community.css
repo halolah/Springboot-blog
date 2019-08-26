@@ -53,10 +53,19 @@ body {
 }
 
 .menu .icon {
-    margin-left: 10px;
+    margin-left: 5px;
     margin-right: 10px;
     font-size: 15px;
     cursor: pointer;
+}
+
+.menu .comment-icon {
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.menu .comment-icon:hover {
+    color: #499ef3;
 }
 
 .menu .active {
@@ -78,4 +87,19 @@ body {
     margin-top: 10px;
     margin-bottom: 15px;
     padding-top: 15px;
+}
+
+.question-tag {
+    margin-right: 5px;
+}
+
+.question-related {
+    line-height: 20px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
+}
+
+.question-wechat {
+    width: 100%;
 }

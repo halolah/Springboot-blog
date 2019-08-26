@@ -93,41 +93,61 @@ function collapseContent(e) {
     }
     // 展开评论
     else {
-        // $.getJSON( "/comment/" +id, function( data ) {
-        //     var items = [];
-        //     $.each( data, function( key, val ) {
-        //         items.push( "<li id='" + key + "'>" + val + "</li>" );
-        //     });
-        //
-        //     $( "<ul/>", {
-        //         "class": "my-new-list",
-        //         html: items.join( "" )
-        //     }).appendTo( "body" );
-        // });
-
-
         $.getJSON("/comment/" + id, function (data) {
-            var commentBody = $("#comment-body-" + id);
-            var items = [];
-            commentBody.appendChild();
-            $.each(data.data, function (comment) {
-                    var c = $("<div/>", {
-                        "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12 comments",
-                        html: comment.content
-                    });
-
-
-                    items.push(c);
-                    $("<div/>", {
-                        "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12 collapse sub-comments",
-                        "id": "comment-" + id,
-                        html: items.join("")
-                    }).appendTo(commentBody);
-
+                var subCommentContainer = $("#comment-" + id);
+                // 子元素包含回复框和回复，不等于1表示有回复内容
+                if (subCommentContainer.children().length != 1) {
 
                     comments.addClass("in");
                     e.classList.add("active");
+                } else {
+                    $.each(data.data.reverse(), function (index, comment) {
+
+                        var contentElement = $("<div/>", {
+                            "class": "add-margin"
+                        }).append($("<div/>", {
+                            "text": comment.content
+                        }));
+                        var gmtCreateElement = $("<div/>", {
+                            "class": "menu"
+                        }).append($("<span/>", {
+                            "class": "pull-right icon",
+                            "html": moment(comment.gmtCreate).format('YYYY-MM-DD')
+                        }));
+
+                        var mediaLeftElement = $("<div/>", {
+                            "class": "media-left"
+                        }).append($("<img/>", {
+                            "class": "media-object img-rounded",
+                            "src": comment.user.avatarUrl
+                        }));
+
+                        var mediaBodyElement = $("<div/>", {
+                            "class": "media-body customize-media-body add-margin"
+                        }).append($("<h4/>", {
+                            "class": "media-heading"
+                        }).append($("<span/>", {
+                            "text": comment.user.name
+                        }).append(mediaLeftElement)));
+
+                        var mediaElement = $("<div/>", {
+                            "class": "media"
+                        }).append(mediaLeftElement)
+                            .append(mediaBodyElement)
+                            .append(contentElement)
+                            .append(gmtCreateElement);
+
+
+                        var commentElement = $("<div/>", {
+                            "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12 comments"
+                        });
+                        commentElement.append(mediaElement);
+                        subCommentContainer.prepend(commentElement);
+                    });
+                    comments.addClass("in");
+                    e.classList.add("active");
                 }
+            }
             );
 
         }

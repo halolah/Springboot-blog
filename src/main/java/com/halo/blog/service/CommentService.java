@@ -4,10 +4,7 @@ import com.halo.blog.dto.CommentDTO;
 import com.halo.blog.enums.CommentTypesEnum;
 import com.halo.blog.exception.CustomizeErrorCode;
 import com.halo.blog.exception.CustomizeException;
-import com.halo.blog.mapper.CommentMapper;
-import com.halo.blog.mapper.QuestionExMapper;
-import com.halo.blog.mapper.QuestionMapper;
-import com.halo.blog.mapper.UserMapper;
+import com.halo.blog.mapper.*;
 import com.halo.blog.model.*;
 import com.halo.blog.util.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,9 @@ public class CommentService {
 
     @Autowired
     private CommentMapper commentMapper;
+
+    @Autowired
+    private CommentExMapper commentExMapper;
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -60,6 +60,12 @@ public class CommentService {
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
+
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExMapper.incComment(parentComment);
+
 
             commentMapper.insert(comment);
 
