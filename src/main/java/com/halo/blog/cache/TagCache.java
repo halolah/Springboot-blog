@@ -55,7 +55,7 @@ public class TagCache {
         return tagDTOS;
     }
 
-    public static String invalid(String tags) {
+    public static String filterInvalid(String tags) {
         String[] split = StringUtils.split(tags, ",");
         List<TagDTO> tagDTOS = get();
         // 返回所有的tag列表
