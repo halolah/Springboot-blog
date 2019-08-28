@@ -72,7 +72,7 @@ public class CommentService {
             commentExMapper.incComment(parentComment);
 
             // 增加通知
-            createNotification(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypesEnum.REPLY_COMMENT);
+            createNotification(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypesEnum.REPLY_COMMENT, question.getId());
 
             commentMapper.insert(comment);
         } else {
@@ -81,7 +81,8 @@ public class CommentService {
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
-            createNotification(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationTypesEnum.REPLY_COMMENT);
+            // 增加通知
+            createNotification(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationTypesEnum.REPLY_QUESTION, question.getId());
 
             commentMapper.insert(comment);
             question.setCommentCount(1);
@@ -89,11 +90,11 @@ public class CommentService {
         }
     }
 
-    private void createNotification(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypesEnum replyComment) {
+    private void createNotification(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypesEnum replyComment, Long outId) {
         Notification notification = new Notification();
         notification.setGmtCreated(System.currentTimeMillis());
         notification.setType(replyComment.getType());
-        notification.setOuterid(comment.getParentId());
+        notification.setOuterid(outId);
         notification.setNotifier(comment.getCommentator());
         notification.setReceiver(receiver);
         notification.setOuterTitle(outerTitle);

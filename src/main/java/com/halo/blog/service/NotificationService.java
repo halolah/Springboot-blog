@@ -2,7 +2,10 @@ package com.halo.blog.service;
 
 import com.halo.blog.dto.NotificationDTO;
 import com.halo.blog.dto.PaginationDTO;
+import com.halo.blog.enums.NotificationStatusEnum;
 import com.halo.blog.enums.NotificationTypesEnum;
+import com.halo.blog.exception.CustomizeErrorCode;
+import com.halo.blog.exception.CustomizeException;
 import com.halo.blog.mapper.NotificationMapper;
 import com.halo.blog.model.*;
 import com.halo.blog.util.MyUtils;
@@ -55,7 +58,7 @@ public class NotificationService {
         NotificationExample example = new NotificationExample();
         example.createCriteria()
                 .andReceiverEqualTo(userId);
-//        example.setOrderByClause("gmt_create desc");
+        example.setOrderByClause("GMT_CREATED desc");
 
         List<Notification> notifications = notificationMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
 
@@ -77,9 +80,28 @@ public class NotificationService {
 
     public long unreadCount(Long userId) {
         NotificationExample notificationExample = new NotificationExample();
-        notificationExample.createCriteria().andReceiverEqualTo(userId);
+        notificationExample.createCriteria()
+                .andReceiverEqualTo(userId)
+                .andStatusEqualTo(NotificationStatusEnum.UNREAD.getStatus());
         long unreadCount = notificationMapper.countByExample(notificationExample);
         return unreadCount;
+    }
+
+    public NotificationDTO read(Long id, User user) {
+        Notification notification = notificationMapper.selectByPrimaryKey(id);
+        if (notification == null) {
+            throw new CustomizeException(CustomizeErrorCode.NOTIFICATION_NOT_FOUND);
+        }
+        if (!notification.getReceiver().equals(user.getId())) {
+            throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
+        }
+        notification.setStatus(NotificationStatusEnum.READ.getStatus());
+        notificationMapper.updateByPrimaryKey(notification);
+
+        NotificationDTO notificationDTO = new NotificationDTO();
+        BeanUtils.copyProperties(notification, notificationDTO);
+        notificationDTO.setTypeName(NotificationTypesEnum.nameOfType(notification.getType()));
+        return notificationDTO;
     }
 }
 
