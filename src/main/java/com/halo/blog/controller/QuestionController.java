@@ -1,7 +1,7 @@
 package com.halo.blog.controller;
 
 import com.halo.blog.dto.CommentDTO;
-import com.halo.blog.dto.QuestionDTO;
+import com.halo.blog.dto.T;
 import com.halo.blog.enums.CommentTypesEnum;
 import com.halo.blog.service.CommentService;
 import com.halo.blog.service.QuestionService;
@@ -32,8 +32,8 @@ public class QuestionController {
         List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypesEnum.QUESTION);
         // 累加阅读数
         questionService.incView(id);
-        QuestionDTO questionDTO = questionService.getById(id);
-        List<QuestionDTO> relatedQuestion = questionService.selectRelated(questionDTO);
+        T questionDTO = questionService.getById(id);
+        List<T> relatedQuestion = questionService.selectRelated(questionDTO);
 
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);

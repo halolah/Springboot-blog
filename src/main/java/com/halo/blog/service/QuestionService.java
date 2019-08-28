@@ -1,7 +1,7 @@
 package com.halo.blog.service;
 
 import com.halo.blog.dto.PaginationDTO;
-import com.halo.blog.dto.QuestionDTO;
+import com.halo.blog.dto.T;
 import com.halo.blog.exception.CustomizeErrorCode;
 import com.halo.blog.exception.CustomizeException;
 import com.halo.blog.mapper.QuestionExMapper;
@@ -16,7 +16,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +44,7 @@ public class QuestionService {
     public PaginationDTO list(Integer page, Integer size) {
         Integer offset = size * (page - 1);
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        List<T> questionDTOList = new ArrayList<>();
 
         PaginationDTO paginationDTO = new PaginationDTO();
 
@@ -58,21 +57,25 @@ public class QuestionService {
             page = paginationDTO.getTotalPage();
         }
 
-
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
-            QuestionDTO questionDTO = new QuestionDTO();
+            T questionDTO = new T();
             MyUtils.myCopyProperties(question, questionDTO);
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
 
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
 
         return paginationDTO;
     }
 
     public PaginationDTO list(Long userId, Integer page, Integer size) {
+        /**
+         * page： 页数
+         * offset： 从多少条开始
+         * size： 取多少条
+         */
 
         Integer offset = size * (page - 1);
 
@@ -80,7 +83,7 @@ public class QuestionService {
         QuestionExample example = new QuestionExample();
         example.createCriteria().andCreatorEqualTo(userId);
         List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        List<T> questionDTOList = new ArrayList<>();
 
         PaginationDTO paginationDTO = new PaginationDTO();
 
@@ -97,24 +100,24 @@ public class QuestionService {
 
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
-            QuestionDTO questionDTO = new QuestionDTO();
+            T questionDTO = new T();
             MyUtils.myCopyProperties(question, questionDTO);
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
 
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setData(questionDTOList);
         return paginationDTO;
     }
 
-    public QuestionDTO getById(Long id) {
+    public T getById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
 
         User user = userMapper.selectByPrimaryKey(question.getCreator());
-        QuestionDTO questionDTO = new QuestionDTO();
+        T questionDTO = new T();
         questionDTO.setUser(user);
         MyUtils.myCopyProperties(question, questionDTO);
         return questionDTO;
@@ -152,7 +155,7 @@ public class QuestionService {
         questionExMapper.incView(question);
     }
 
-    public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
+    public List<T> selectRelated(T queryDTO) {
         if (StringUtils.isBlank(queryDTO.getTag())) {
             return new ArrayList<>();
         }
@@ -162,8 +165,8 @@ public class QuestionService {
         question.setId(queryDTO.getId());
         question.setTag(regerxpTag);
         List<Question> questions = questionExMapper.selectRelated(question);
-        List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
-            QuestionDTO questionDTO = new QuestionDTO();
+        List<T> questionDTOS = questions.stream().map(q -> {
+            T questionDTO = new T();
             MyUtils.myCopyProperties(q, questionDTO);
             return questionDTO;
         }).collect(Collectors.toList());

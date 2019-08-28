@@ -2,6 +2,8 @@ package com.halo.blog.service;
 
 import com.halo.blog.dto.CommentDTO;
 import com.halo.blog.enums.CommentTypesEnum;
+import com.halo.blog.enums.NotificationStatusEnum;
+import com.halo.blog.enums.NotificationTypesEnum;
 import com.halo.blog.exception.CustomizeErrorCode;
 import com.halo.blog.exception.CustomizeException;
 import com.halo.blog.mapper.*;
@@ -10,7 +12,6 @@ import com.halo.blog.util.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,13 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
-    @Transient
-    public void insert(Comment comment) throws CustomizeException {
+    @Autowired
+    private NotificationMapper notificationMapper;
+
+    /**
+     * @Transactional 此处应使用Transactional方法保证事务一致性.
+     */
+    public void insert(Comment comment, User commentator) throws CustomizeException {
         // 判断评论的对象是否存在，若不存在，抛出异常
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
@@ -49,7 +55,6 @@ public class CommentService {
         if (comment.getType() == null || !CommentTypesEnum.isExist(comment.getType())) {
             throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_NOT_EXIST);
         }
-
         if (comment.getType().equals(CommentTypesEnum.COMMENT.getType())) {
             // 回复评论
             Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
@@ -60,25 +65,41 @@ public class CommentService {
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
-
+            // 增加评论数
             Comment parentComment = new Comment();
             parentComment.setId(comment.getParentId());
             parentComment.setCommentCount(1);
             commentExMapper.incComment(parentComment);
 
+            // 增加通知
+            createNotification(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypesEnum.REPLY_COMMENT);
 
             commentMapper.insert(comment);
-
         } else {
             // 回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
+            createNotification(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationTypesEnum.REPLY_COMMENT);
+
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionExMapper.incComment(question);
         }
+    }
+
+    private void createNotification(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypesEnum replyComment) {
+        Notification notification = new Notification();
+        notification.setGmtCreated(System.currentTimeMillis());
+        notification.setType(replyComment.getType());
+        notification.setOuterid(comment.getParentId());
+        notification.setNotifier(comment.getCommentator());
+        notification.setReceiver(receiver);
+        notification.setOuterTitle(outerTitle);
+        notification.setNotifierName(notifierName);
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypesEnum type) {

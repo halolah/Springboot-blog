@@ -1,7 +1,7 @@
 package com.halo.blog.controller;
 
 import com.halo.blog.cache.TagCache;
-import com.halo.blog.dto.QuestionDTO;
+import com.halo.blog.dto.T;
 import com.halo.blog.model.Question;
 import com.halo.blog.model.User;
 import com.halo.blog.service.QuestionService;
@@ -26,7 +26,7 @@ public class PublishController {
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(value = "id") Long id,
                        Model model) {
-        QuestionDTO question = questionService.getById(id);
+        T question = questionService.getById(id);
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());

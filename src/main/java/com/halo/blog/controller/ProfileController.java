@@ -2,7 +2,9 @@ package com.halo.blog.controller;
 
 import com.halo.blog.dto.PaginationDTO;
 import com.halo.blog.mapper.UserMapper;
+import com.halo.blog.model.Notification;
 import com.halo.blog.model.User;
+import com.halo.blog.service.NotificationService;
 import com.halo.blog.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,9 @@ public class ProfileController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name = "action") String action,
                           HttpServletRequest request,
@@ -43,12 +48,17 @@ public class ProfileController {
         if ("questions".equals(action)) {
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
+            PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
+            model.addAttribute("pagination", paginationDTO);
         } else if ("replies".equals(action)) {
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            long unreadCount = notificationService.unreadCount(user.getId());
+            model.addAttribute("pagination", paginationDTO);
             model.addAttribute("section", "replies");
+            model.addAttribute("unreadCount", unreadCount);
             model.addAttribute("sectionName", "最新回复");
+
         }
-        PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
-        model.addAttribute("pagination", paginationDTO);
         return "profile";
     }
 

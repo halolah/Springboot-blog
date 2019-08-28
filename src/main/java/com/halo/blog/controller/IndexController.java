@@ -1,9 +1,7 @@
 package com.halo.blog.controller;
 
 import com.halo.blog.dto.PaginationDTO;
-import com.halo.blog.dto.QuestionDTO;
 import com.halo.blog.mapper.UserMapper;
-import com.halo.blog.model.User;
 import com.halo.blog.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,9 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 
 @Controller

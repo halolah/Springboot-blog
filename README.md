@@ -14,10 +14,24 @@
 ## 相关执行
 
 #### flyway
+版本迭代
 mvn flyway:migrate
+版本修复
+mvn flyway:repair
+清除数据
+mvn flyway:clean
+
+
 
 #### mybatis.generator
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+
+
+#### 其他
+
+mapper：
+service：
+
 
 
 
