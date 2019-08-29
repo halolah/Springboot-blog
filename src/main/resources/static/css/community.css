@@ -115,3 +115,8 @@ body {
     margin: 5px 5px;
     display: inline-block;
 }
+
+.footer {
+    padding: 25px 25%;
+    color: #666;
+}
