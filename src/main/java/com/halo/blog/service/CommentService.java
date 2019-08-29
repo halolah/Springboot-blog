@@ -90,6 +90,16 @@ public class CommentService {
         }
     }
 
+    /**
+     * 设置通知，
+     *
+     * @param comment      评论
+     * @param receiver     被通知人
+     * @param notifierName 通知内容
+     * @param outerTitle   问题或评论标题
+     * @param replyComment 回复内容
+     * @param outId        评论或问题ID
+     */
     private void createNotification(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypesEnum replyComment, Long outId) {
         Notification notification = new Notification();
         notification.setGmtCreated(System.currentTimeMillis());

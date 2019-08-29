@@ -27,12 +27,20 @@ public class NotificationService {
     @Autowired
     private NotificationMapper notificationMapper;
 
+    /**
+     * 实现分页功能
+     *
+     * @param userId
+     * @param page
+     * @param size
+     * @return
+     */
     public PaginationDTO list(Long userId, Integer page, Integer size) {
 
         PaginationDTO<NotificationDTO> paginationDTO = new PaginationDTO<>();
-
         Integer totalPage;
 
+        // 获取通知总数
         NotificationExample notificationExample = new NotificationExample();
         notificationExample.createCriteria()
                 .andReceiverEqualTo(userId);
@@ -53,13 +61,12 @@ public class NotificationService {
 
         paginationDTO.setPagination(totalCount, page, size);
 
-        //size*(page-1)
+        //实现分页功能
         Integer offset = size * (page - 1);
         NotificationExample example = new NotificationExample();
         example.createCriteria()
                 .andReceiverEqualTo(userId);
         example.setOrderByClause("GMT_CREATED desc");
-
         List<Notification> notifications = notificationMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
 
         if (notifications.size() == 0) {
@@ -68,6 +75,7 @@ public class NotificationService {
 
         List<NotificationDTO> notificationDTOS = new ArrayList<>();
 
+        // 将上面获取的值赋予notificationDTO
         for (Notification notification : notifications) {
             NotificationDTO notificationDTO = new NotificationDTO();
             BeanUtils.copyProperties(notification, notificationDTO);
@@ -78,6 +86,11 @@ public class NotificationService {
         return paginationDTO;
     }
 
+    /**
+     * 获取未读通知数
+     * @param userId: 用户ID
+     * @return
+     */
     public long unreadCount(Long userId) {
         NotificationExample notificationExample = new NotificationExample();
         notificationExample.createCriteria()
@@ -87,6 +100,12 @@ public class NotificationService {
         return unreadCount;
     }
 
+    /**
+     *更新为已读状态
+     * @param id
+     * @param user
+     * @return 返回问题id等信息，为跳转页面提供信息
+     */
     public NotificationDTO read(Long id, User user) {
         Notification notification = notificationMapper.selectByPrimaryKey(id);
         if (notification == null) {

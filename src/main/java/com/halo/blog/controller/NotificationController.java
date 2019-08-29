@@ -23,18 +23,25 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
+    /**
+     * 当用户点击未读通知
+     *
+     * @param id
+     * @param request
+     * @param model
+     * @return
+     */
     @GetMapping("/notification/{id}")
     public String profile(@PathVariable(name = "id") Long id,
                           HttpServletRequest request,
                           Model model
     ) {
-
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             model.addAttribute("error", "用户未登陆");
             return "redirect:/";
         }
-        // user用来验证是否是本人，id传值
+        // user用来验证是否是本人，并根据id更改状态
         NotificationDTO notificationDTO = notificationService.read(id, user);
         if (NotificationTypesEnum.REPLY_COMMENT.getType() == notificationDTO.getType()
                 || NotificationTypesEnum.REPLY_QUESTION.getType() == notificationDTO.getType()) {
