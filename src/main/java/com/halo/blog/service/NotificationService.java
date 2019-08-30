@@ -59,7 +59,7 @@ public class NotificationService {
             page = totalPage;
         }
 
-        paginationDTO.setPagination(totalCount, page, size);
+        paginationDTO.setPagination(totalPage, page);
 
         //实现分页功能
         Integer offset = size * (page - 1);

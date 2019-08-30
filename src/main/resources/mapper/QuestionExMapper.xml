@@ -37,5 +37,23 @@
         order by gmt_create desc limit 20
     </select>
 
+    <select id="countBySearch" parameterType="com.halo.blog.dto.QuestionQueryDTO" resultType="java.lang.Integer">
+        select count(*) from QUESTION
+        <where>
+            <if test="search != null">
+                and title regexp #{search}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBySearch" parameterType="com.halo.blog.dto.QuestionQueryDTO" resultMap="BaseResultMap">
+        select * from QUESTION
+        <where>
+            <if test="search != null">
+                and title regexp #{search}
+            </if>
+        </where>
+        order by gmt_create desc limit #{page},#{size}
+    </select>
 
 </mapper>

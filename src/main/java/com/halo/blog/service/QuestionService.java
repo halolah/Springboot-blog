@@ -1,6 +1,7 @@
 package com.halo.blog.service;
 
 import com.halo.blog.dto.PaginationDTO;
+import com.halo.blog.dto.QuestionQueryDTO;
 import com.halo.blog.dto.T;
 import com.halo.blog.exception.CustomizeErrorCode;
 import com.halo.blog.exception.CustomizeException;
@@ -41,21 +42,37 @@ public class QuestionService {
     size * (page - 1)
      */
 
-    public PaginationDTO list(Integer page, Integer size) {
-        Integer offset = size * (page - 1);
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
-        List<T> questionDTOList = new ArrayList<>();
-
+    public PaginationDTO list(String search, Integer page, Integer size) {
+        if (StringUtils.isNoneBlank(search)) {
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
         PaginationDTO paginationDTO = new PaginationDTO();
+        Integer totalPage;
 
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
-        paginationDTO.setPagination(totalCount, page, size);
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExMapper.countBySearch(questionQueryDTO);
+
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
+            totalPage = totalCount / size + 1;
+        }
+
         if (page < 1) {
             page = 1;
         }
-        if (page > paginationDTO.getTotalPage()) {
-            page = paginationDTO.getTotalPage();
+        if (page > totalPage) {
+            page = totalPage;
         }
+        paginationDTO.setPagination(totalPage, page);
+        // offset为每页第一个记录
+        Integer offset = page < 1 ? 0 : size * (page - 1);
+        questionQueryDTO.setPage(offset);
+        questionQueryDTO.setSize(size);
+        List<Question> questions = questionExMapper.selectBySearch(questionQueryDTO);
+        List<T> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -70,14 +87,14 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(Long userId, Integer page, Integer size) {
-        /**
+    public PaginationDTO list(Long userId, Integer page, Integer size) {/**
          * page： 页数
          * offset： 从多少条开始
          * size： 取多少条
          */
 
         Integer offset = size * (page - 1);
+        Integer totalPage;
 
 
         QuestionExample example = new QuestionExample();
@@ -90,13 +107,20 @@ public class QuestionService {
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(userId);
         Integer totalCount = (int) questionMapper.countByExample(questionExample);
-        paginationDTO.setPagination(totalCount, page, size);
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
+            totalPage = totalCount / size + 1;
+        }
+
         if (page < 1) {
             page = 1;
         }
-        if (page > paginationDTO.getTotalPage()) {
-            page = paginationDTO.getTotalPage();
+        if (page > totalPage) {
+            page = totalPage;
         }
+        paginationDTO.setPagination(totalPage, page);
+
 
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());

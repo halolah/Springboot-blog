@@ -114,10 +114,12 @@
 
                 <div class="media">
                     <div class="media-left">
-                        <a href="#"><img class="media-object img-rounded" th:src="${question.user.avatarUrl}"></a>
+                        <a href="#"><img class="media-object img-rounded"
+                                         th:src="${session.user != null ? session.user.avatarUrl : '/images/default-user.png'}"></a>
                     </div>
                     <div class="media-body customize-media-body">
-                        <h4 class="media-heading"><span th:text="${question.user.name}"></span></h4>
+                        <h4 class="media-heading"><span
+                                th:text="${session.user != null ? session.user.name : '匿名用户'}"></span></h4>
                     </div>
                 </div>
                 <input type="hidden" id="com_question" th:value="${question.id}">
