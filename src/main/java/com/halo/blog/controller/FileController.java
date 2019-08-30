@@ -2,6 +2,7 @@ package com.halo.blog.controller;
 
 import com.halo.blog.dto.FileDTO;
 import com.halo.blog.provider.UcloudProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @Controller
+@Slf4j
 public class FileController {
 
     @Autowired
@@ -32,7 +34,7 @@ public class FileController {
             fileDTO.setUrl(fileName);
             return fileDTO;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("upload error", e);
         }
         return null;
     }

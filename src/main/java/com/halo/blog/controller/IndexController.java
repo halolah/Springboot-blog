@@ -3,6 +3,7 @@ package com.halo.blog.controller;
 import com.halo.blog.dto.PaginationDTO;
 import com.halo.blog.mapper.UserMapper;
 import com.halo.blog.service.QuestionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -5,6 +5,7 @@ import com.halo.blog.dto.PaginationDTO;
 import com.halo.blog.enums.NotificationTypesEnum;
 import com.halo.blog.model.User;
 import com.halo.blog.service.NotificationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @Controller
+@Slf4j
 public class NotificationController {
     @Autowired
     private NotificationService notificationService;
@@ -47,6 +49,7 @@ public class NotificationController {
                 || NotificationTypesEnum.REPLY_QUESTION.getType() == notificationDTO.getType()) {
             return "redirect:/question/" + notificationDTO.getOuterid();
         } else {
+            log.error("reply type is wrong");
             return "redirect:/";
         }
     }
