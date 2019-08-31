@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.halo.blog.dto.ResultDTO;
 import com.halo.blog.exception.CustomizeErrorCode;
 import com.halo.blog.exception.CustomizeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,6 +21,7 @@ import java.io.PrintWriter;
  */
 
 @ControllerAdvice
+@Slf4j
 public class CustomizeExceptionHandler {
     @ExceptionHandler(Exception.class)
     ModelAndView handle(HttpServletRequest request, Throwable ex, Model model, HttpServletResponse response) {
@@ -30,6 +32,7 @@ public class CustomizeExceptionHandler {
             if (ex instanceof CustomizeException) {
                 resultDTO = ResultDTO.errorOf((CustomizeException) ex);
             } else {
+                log.error("json handle error", ex);
                 resultDTO = ResultDTO.errorOf(CustomizeErrorCode.SYSTEM_ERROR);
             }
             try {
@@ -39,8 +42,8 @@ public class CustomizeExceptionHandler {
                 PrintWriter writer = response.getWriter();
                 writer.write(JSON.toJSONString(resultDTO));
                 writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                log.error("write error", e);
             }
             return null;
 
@@ -50,6 +53,7 @@ public class CustomizeExceptionHandler {
             model.addAttribute("message", ex.getMessage());
 
         } else {
+            log.error("html handler error", ex);
             model.addAttribute("message", CustomizeErrorCode.SYSTEM_ERROR);
         }
         return new ModelAndView("error");
