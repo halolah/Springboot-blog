@@ -66,7 +66,7 @@ public class NotificationService {
         NotificationExample example = new NotificationExample();
         example.createCriteria()
                 .andReceiverEqualTo(userId);
-        example.setOrderByClause("GMT_CREATED desc");
+        example.setOrderByClause("GMT_CREATE desc");
         List<Notification> notifications = notificationMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
 
         if (notifications.size() == 0) {
