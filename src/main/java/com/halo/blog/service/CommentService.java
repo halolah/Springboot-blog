@@ -110,7 +110,7 @@ public class CommentService {
             return;
         }
         Notification notification = new Notification();
-        notification.setGmtCreated(System.currentTimeMillis());
+        notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(replyComment.getType());
         notification.setOuterid(outId);
         notification.setNotifier(comment.getCommentator());
