@@ -9,6 +9,7 @@ import com.halo.blog.exception.CustomizeException;
 import com.halo.blog.mapper.NotificationMapper;
 import com.halo.blog.model.*;
 import com.halo.blog.util.MyUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 
 @Service
+@Slf4j
 public class NotificationService {
 
     @Autowired
@@ -60,34 +62,39 @@ public class NotificationService {
         }
 
         paginationDTO.setPagination(totalPage, page);
+        try {
+            //实现分页功能
+            Integer offset = size * (page - 1);
+            NotificationExample example = new NotificationExample();
+            example.createCriteria()
+                    .andReceiverEqualTo(userId);
+            example.setOrderByClause("GMT_CREATE desc");
+            List<Notification> notifications = notificationMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
 
-        //实现分页功能
-        Integer offset = size * (page - 1);
-        NotificationExample example = new NotificationExample();
-        example.createCriteria()
-                .andReceiverEqualTo(userId);
-        example.setOrderByClause("GMT_CREATE desc");
-        List<Notification> notifications = notificationMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
+            if (notifications.size() == 0) {
+                return paginationDTO;
+            }
 
-        if (notifications.size() == 0) {
+            List<NotificationDTO> notificationDTOS = new ArrayList<>();
+
+            // 将上面获取的值赋予notificationDTO
+            for (Notification notification : notifications) {
+                NotificationDTO notificationDTO = new NotificationDTO();
+                BeanUtils.copyProperties(notification, notificationDTO);
+                notificationDTO.setTypeName(NotificationTypesEnum.nameOfType(notification.getType()));
+                notificationDTOS.add(notificationDTO);
+            }
+            paginationDTO.setData(notificationDTOS);
             return paginationDTO;
+        } catch (Exception e) {
+            log.error("PaginationDTO list handle error", e);
         }
-
-        List<NotificationDTO> notificationDTOS = new ArrayList<>();
-
-        // 将上面获取的值赋予notificationDTO
-        for (Notification notification : notifications) {
-            NotificationDTO notificationDTO = new NotificationDTO();
-            BeanUtils.copyProperties(notification, notificationDTO);
-            notificationDTO.setTypeName(NotificationTypesEnum.nameOfType(notification.getType()));
-            notificationDTOS.add(notificationDTO);
-        }
-        paginationDTO.setData(notificationDTOS);
-        return paginationDTO;
+        return null;
     }
 
     /**
      * 获取未读通知数
+     *
      * @param userId: 用户ID
      * @return
      */
@@ -101,7 +108,8 @@ public class NotificationService {
     }
 
     /**
-     *更新为已读状态
+     * 更新为已读状态
+     *
      * @param id
      * @param user
      * @return 返回问题id等信息，为跳转页面提供信息
